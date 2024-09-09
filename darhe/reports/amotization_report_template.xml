@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    
+    <record id="amotization_report" model="ir.actions.report">
+        <field name="name">Report Amoritzación</field>
+        <field name="model">sale.subscription</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">darhe.amotization_report_template</field>
+        <field name="report_file">darhe.amotization_report_template</field>
+        <field name="binding_model_id" ref="subscription_oca.model_sale_subscription" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- TEMPLATE -->
+
+    <template id="amotization_report_template">
+           <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                     
+                    <div class="container">
+                    <!-- ####### HEY, I AM THE SOURCE EDITOR! #########-->
+                    <h1 style="color: #2e6c80;">ESTADO DE CUENTA</h1>
+                    <table class="table table-bordered border-primary">
+                      <thead>
+                        <tr>
+                          <td class="table-success">CLIENTES</td>
+                          <td colspan="2"><span t-field="o.partner_id.name"/></td>
+                          <td style="text-align: center;"><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></td>
+                        </tr>
+                        
+                        <tr>
+                          <td class="table-success">LOTE</td>
+                          <td><span t-field="o.product_id.name"/></td>
+                          <td class="table-success">Desarrollo</td>
+                          <td><span t-field="o.company_id.name"/></td>
+                        </tr>
+                        
+                        <tr>
+                          <td class="table-success">PLAZO</td>
+                          <td><span t-field="o.template_id.name"/></td>
+                          <td class="table-success">TOTAL VENTA</td>
+                          <td>$ <span t-field="o.product_id.lst_price"/></td>
+                        </tr>
+     
+                        <tr>
+                          <td class="table-success">TOTAL PAGADO</td>
+                          <td><span t-field="o.amount_paid"/></td>  
+                          <td class="table-success">TOTAL A VENCIDO</td>
+                          <td><span t-field="o.amount_paid_due"/></td>
+                        </tr>
+                        
+                        <tr>
+                          <td class="table-success">M<sup>2</sup></td>
+                          <td><span t-esc="'%.2f'% o.product_id.m2"/></td>
+                          <td class="table-success">PRECIO M<sup>2</sup></td>
+                          <td>$ <span t-esc="'%.2f'% o.product_id.pricem2"/></td>
+                        </tr>
+                      </thead>
+
+                    </table>
+                    
+                    <hr/>
+                    <h1 style="color: #2e6c80;">TABLA DE AMORTIZACIÓN</h1>
+                    <table class="table table-bordered border-primary">
+                      <thead>
+                        <tr>
+                          <td class="table-success">No.</td>
+                          <td class="table-success">FECHA</td>
+                          <td class="table-success">TIPO</td>
+                          <td class="table-success">PAGOS</td>
+                          <td class="table-success">SALDO</td>
+                          <td class="table-success">ESTATUS</td>
+                        </tr>
+                      </thead>
+                    </table>
+                    
+                    <tbody>
+                      <t t-set="AmortitationTable" t-out="o.getAmortitationTable()"/>
+                    </tbody>
+                    
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="dahre_amortitation_table" name="Amortitation Table">
+        <table class="table table-bordered border-primary">
+        <thead>
+            <tr>
+              <td class="table-success">No.</td>
+              <td class="table-success">FECHA</td>
+              <td class="table-success">TIPO</td>
+              <td class="table-success">PAGOS</td>
+              <td class="table-success">SALDO</td>
+              <td class="table-success">ESTATUS</td>
+            </tr>
+          </thead>
+        <tbody>
+          <t t-foreach="listOfPayments" t-as="listOfPayments_id">
+            <tr>
+              <td><span t-out="listOfPayments_id['no']"/></td>
+              <td><span t-out="listOfPayments_id['date']"/></td>
+              <td style="font-size:13px;"><span t-out="listOfPayments_id['tipo']"/></td>
+              <td>$ <span t-esc="'{0:,.2f}'.format(float(listOfPayments_id['pago']))"/></td>
+              <td>$ <span t-esc="'{0:,.2f}'.format(float(listOfPayments_id['saldo']))"/></td>
+              <t t-if="listOfPayments_id['state'] == 'PAGADO'">
+                <td><strong><span t-out="listOfPayments_id['state']" class="text-success"/></strong></td>  
+              </t>
+              <t t-elif="listOfPayments_id['state'] == 'VENCIDO'">
+                <td><strong><span t-out="listOfPayments_id['state']" class="text-danger"/></strong></td>  
+              </t>
+              <t t-else="">
+                <td><strong><span t-out="listOfPayments_id['state']" class="text-muted"/></strong></td>  
+              </t>
+            </tr>
+          </t>
+        </tbody>
+      </table>
+      <hr/>
+      <h1 style="color: #2e6c80;">FLUJO DE CAJA</h1>
+      <table class="table table-bordered border-primary">
+        <thead>
+            <tr>
+              <td style="width:10%" class="table-success">No.</td>
+              <td style="width:20%" class="table-success">FOLIO</td>
+              <td style="width:20%" class="table-success">FECHA</td>
+              <td style="width:20%" class="table-success">MONTO</td>
+              <td style="width:30%" class="table-success">DETALLE</td>
+            </tr>
+          </thead>
+        <tbody>
+           <t t-foreach="listofInvoices" t-as="listofInvoices_id">
+             <tr>
+                <td style="width:10%"><span t-out="listofInvoices_id['no']"/></td>
+                <td style="width:20%"><span t-out="listofInvoices_id['folio']"/></td>
+                <td style="width:20%"><span t-out="listofInvoices_id['dateOrder']"/></td>
+                <td style="width:20%">$ <span t-esc="'{0:,.2f}'.format(float(listofInvoices_id['amount']))"/></td>
+                <td style="font-size:13px;width:30%"><span t-out="listofInvoices_id['comment']"/></td>
+                <!--<t t-set="amountTotal" t-out="listofInvoices_id['suma']"/>-->
+             </tr>
+            </t>
+            <tr>
+              <td class="table-info" colspan="3"><strong>Total</strong></td>
+              <td colspan="1"><strong>MXN <span t-esc="'{0:,.2f}'.format(float(listofInvoices[len(listofInvoices)-1]['suma']))"/> </strong></td>
+            </tr>
+        </tbody>
+      </table>
+    </template>
+
+</odoo>

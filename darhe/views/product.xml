@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_only_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.only.form.view.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header" position="inside">
+                    <field name="state" widget='statusbar' options="{'clickable': '1'}" />
+                </xpath>
+                <xpath expr="//field[@name='categ_id']" position="before">
+                    <field name="etapa"/>
+                    <field name="m2"/>
+                    <field name="pricem2"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- TARGET OT UPLOAD DOCS -->
+        <!--VIEW MODAL UPLOAD-->
+        <record id="import_account_move_line_view" model="ir.ui.view">
+            <field name="name">Importar Archivos</field>
+            <field name="model">upload.layout.initial</field>
+            <field name="arch" type="xml">
+                <form string="Importar Archivos">
+					<group>
+		                <field name="file"/>
+		                <field name="type_upload" wedgit="selection"/>
+                    </group>
+                    <footer>
+                        <button string="Import" name="import_initil_lote" type="object" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_import_account_move_line" model="ir.actions.act_window">
+            <field name="name">Importar Archivos</field>
+            <field name="res_model">upload.layout.initial</field>           
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="product_template_tree_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.only.tree.view.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/header" position="inside">
+                    <button name="%(action_import_account_move_line)d" class="oe_highlight" string="Importar Layout" type="action" />
+                </xpath>
+                <xpath expr="//field[@name='qty_available']" position="before">
+                    <field name="etapa"/>
+                    <field name="state" widget="badge" decoration-info = "state == 'DISPONIBLE'"
+                                                       decoration-danger = "state == 'CANCELADO'"
+                                                       decoration-success = "state == 'VENDIDO'"
+                                                       />
+                </xpath>
+                
+                <field name="standard_price" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="qty_available" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="virtual_available" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <!--<field name="product_tags_ids" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>-->
+            </field>
+        </record>
+
+      
+
+    </data>
+</odoo>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    
+    <record id="mail_notification_before_deadline" model="mail.template">
+        <field name="name">RECORDATORIO PAGOS </field>
+        <field name="email_from">
+            {{ (object.partner_id.email and '%s &lt;%s&gt;' % (object.partner_id.name, object.partner_id.email) or '') }}
+        </field>
+        <field name="subject">
+            {{ object.partner_id.name }} Se acerca tu fecha de corte.
+        </field>
+        <field name="model_id" ref="subscription_oca.model_sale_subscription" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+            <div style="width:100%">
+                <div style="max-width:800px;margin-left:auto;margin-right:auto">                                        
+                    <div style="width:fit-content;margin-left:auto;margin-right:auto;line-height:10px">
+                        <a href="https://www.darhecobranza.com.mx" style="outline:none" target="_blank" data-saferedirecturl="">
+                            <img style="border-style:none;vertical-align:middle;padding:0px;margin: 0px; height: auto; width: 80px;" t-attf-src="/logo.png?company={{ object.company_id.id }}" t-attf-alt="{{ object.company_id.name }}"/>
+                        </a>
+                    </div>
+
+                    <h1 style="color:#282c38;direction:ltr;font-family:Inter,Arial,Sans-serif;font-size:24px;font-weight:700;letter-spacing:normal;line-height:150%;padding-bottom:16px;margin:0" align="center">
+                    
+                    ¡Buen día, estimado cliente!
+                    
+                    </h1>
+
+                    
+                    
+                    
+                    <div>
+                        <div>
+                            <h1 style="color:#282c38;direction:ltr;font-family:Inter,Arial,Sans-serif;font-size:24px;font-weight:700;letter-spacing:normal;line-height:150%;padding-bottom:16px;margin:0" align="left">Hola, <t t-out="object.partner_id.name"/> </h1>
+                        </div>
+                        <div style="direction:ltr;font-size:16px;letter-spacing:0;line-height:150%;color:#282c38;padding-top:0px;padding-bottom:16px;font-size:18px" align="left">
+                            <p>
+                                Nos dirigimos a usted para recordarle que la fecha límite de pago de su lote <t t-out="object.product_id.name"/> en <t t-out="object.company_id.name"/> es el día <t t-out="object.recurring_next_date"/>. 
+                            </p>    
+                            <p>
+                                Agradecemos su pronta respuesta para evitar futuros riesgos. Si ya realizó el pago, le solicitamos amablemente que nos proporcione el comprobante del mismo para la emisión de su recibo.
+                            </p>
+                            <p>                        
+                                Quedamos a la espera de sus comentarios y agradecemos su colaboración.
+                            </p>
+                            <p >
+                                Saludos coordiales.
+                            </p>
+                        </div>
+                    </div>
+
+                    
+                    <div style="margin-bottom:8px;background-color:#f5f6fb;color:#282c38;direction:ltr;font-size:14px;font-weight:400;letter-spacing:0;border-radius:12px;padding:14px">
+                    <h4 style="text-align:center;font-size:18px;">Detalles</h4>
+                    <div style="font-size:14px;font-weight:bold;padding-bottom:10px"><t t-out="object.company_id.name"/></div>
+                        <table style="width:100%">
+                            <tbody>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Fecha de pago</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right"><t t-out="object.recurring_next_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Número de Lote</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right"><t t-out="object.product_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Importe</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right">$ <t t-esc="'{0:,.2f}'.format(object.amount_paid_invoice)" /></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:0px;padding-left:0px;width:60%" align="left">Total Pagado</td>
+                                <td style="padding-bottom:0px;padding-right:0px;width:30%" align="right">$ <t t-esc="'{0:,.2f}'.format(object.amount_paid)" /></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                
+                </div>
+				</div>
+        </field>
+    </record>
+
+    <record id="mail_notification_deadline" model="mail.template">
+        <field name="name">RECORDATORIO FECHA LIMITE </field>
+        <field name="email_from">
+            {{ (object.partner_id.email and '%s &lt;%s&gt;' % (object.partner_id.name, object.partner_id.email) or '') }}
+        </field>
+        <field name="subject">
+            {{ object.partner_id.name }} Hoy es el limite de su fecha de corte.
+        </field>
+        <field name="model_id" ref="subscription_oca.model_sale_subscription" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+            <div style="width:100%">
+                <div style="max-width:800px;margin-left:auto;margin-right:auto">                                        
+                    <div style="width:fit-content;margin-left:auto;margin-right:auto;line-height:10px">
+                        <a href="https://www.darhecobranza.com.mx" style="outline:none" target="_blank" data-saferedirecturl="">
+                            <img style="border-style:none;vertical-align:middle;padding:0px;margin: 0px; height: auto; width: 80px;" t-attf-src="/logo.png?company={{ object.company_id.id }}" t-attf-alt="{{ object.company_id.name }}"/>
+                        </a>
+                    </div>
+
+                    <h1 style="color:#282c38;direction:ltr;font-family:Inter,Arial,Sans-serif;font-size:24px;font-weight:700;letter-spacing:normal;line-height:150%;padding-bottom:16px;margin:0" align="center">
+                    
+                    ¡Buen día, estimado cliente!
+                    
+                    </h1>
+                                                            
+                    <div>
+                        <div>
+                            <h1 style="color:#282c38;direction:ltr;font-family:Inter,Arial,Sans-serif;font-size:24px;font-weight:700;letter-spacing:normal;line-height:150%;padding-bottom:16px;margin:0" align="left">Hola, <t t-out="object.partner_id.name"/> </h1>
+                        </div>
+                        <div style="direction:ltr;font-size:16px;letter-spacing:0;line-height:150%;color:#282c38;padding-top:0px;padding-bottom:16px;font-size:18px" align="left">
+                            <p>
+                                Nos dirigimos a usted para recordarle que hoy es la fecha límite de pago de su lote <t t-out="object.product_id.name"/> en <t t-out="object.company_id.name"/> . 
+                            </p>    
+                            <p>
+                                Agradeceríamos mucho su colaboración realizando el pago y enviándonos su comprobante. En caso de necesitar una prórroga o algún método de pago alternativo, por favor háganoslo saber.
+                            </p>
+                            <p>                        
+                                Quedamos a la espera de sus comentarios y agradecemos su colaboración.
+                            </p>
+                            <p >
+                                Saludos coordiales.
+                            </p>
+                        </div>
+                    </div>
+
+                    
+                    <div style="margin-bottom:8px;background-color:#f5f6fb;color:#282c38;direction:ltr;font-size:14px;font-weight:400;letter-spacing:0;border-radius:12px;padding:14px">
+                    <h4 style="text-align:center;font-size:18px;">Detalles</h4>
+                    <div style="font-size:14px;font-weight:bold;padding-bottom:10px"><t t-out="object.company_id.name"/></div>
+                        <table style="width:100%">
+                            <tbody>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Fecha de pago</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right"><t t-out="object.recurring_next_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Número de Lote</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right"><t t-out="object.product_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Importe</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right">$ <t t-esc="'{0:,.2f}'.format(object.amount_paid_invoice)" /></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:0px;padding-left:0px;width:60%" align="left">Total Pagado</td>
+                                <td style="padding-bottom:0px;padding-right:0px;width:30%" align="right">$ <t t-esc="'{0:,.2f}'.format(object.amount_paid)" /></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                
+                </div>
+				</div>
+        </field>
+    </record>
+
+    <record id="mail_notification_after_deadline" model="mail.template">
+        <field name="name">RECORDATORIO CARGO MOROSO </field>
+        <field name="email_from">
+            {{ (object.partner_id.email and '%s &lt;%s&gt;' % (object.partner_id.name, object.partner_id.email) or '') }}
+        </field>
+        <field name="subject">
+            {{ object.partner_id.name }} Cargo post fecha de corte.
+        </field>
+        <field name="model_id" ref="subscription_oca.model_sale_subscription" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+            <div style="width:100%">
+                <div style="max-width:800px;margin-left:auto;margin-right:auto">                                        
+                    <div style="width:fit-content;margin-left:auto;margin-right:auto;line-height:10px">
+                        <a href="https://www.darhecobranza.com.mx" style="outline:none" target="_blank" data-saferedirecturl="">
+                            <img style="border-style:none;vertical-align:middle;padding:0px;margin: 0px; height: auto; width: 80px;" t-attf-src="/logo.png?company={{ object.company_id.id }}" t-attf-alt="{{ object.company_id.name }}"/>
+                        </a>
+                    </div>
+
+                    <h1 style="color:#282c38;direction:ltr;font-family:Inter,Arial,Sans-serif;font-size:24px;font-weight:700;letter-spacing:normal;line-height:150%;padding-bottom:16px;margin:0" align="center">
+                    
+                    ¡Buen día, estimado cliente!
+                    
+                    </h1>
+                                                            
+                    <div>
+                        <div>
+                            <h1 style="color:#282c38;direction:ltr;font-family:Inter,Arial,Sans-serif;font-size:24px;font-weight:700;letter-spacing:normal;line-height:150%;padding-bottom:16px;margin:0" align="left">Hola, <t t-out="object.partner_id.name"/> </h1>
+                        </div>
+                        <div style="direction:ltr;font-size:16px;letter-spacing:0;line-height:150%;color:#282c38;padding-top:0px;padding-bottom:16px;font-size:18px" align="left">
+                            <p>
+                               Hemos notado que la fecha límite de pago ha vencido de su lote <t t-out="object.product_id.name"/> en <t t-out="object.company_id.name"/>  por lo que necesitamos informarle que debemos proceder con el cargo moratorio correspondiente al atraso. 
+                            </p>    
+                            <p>
+                                Le pedimos que se ponga en contacto con nosotros a la brevedad posible para encontrar una solución. Estamos aquí para ayudarle y resolver cualquier inconveniente que pueda surgir.
+                            </p>
+                            <p>                        
+                                Quedamos a la espera de sus comentarios y agradecemos su colaboración.
+                            </p>
+                            <p >
+                                Saludos coordiales.
+                            </p>
+                        </div>
+                    </div>
+
+                    
+                    <div style="margin-bottom:8px;background-color:#f5f6fb;color:#282c38;direction:ltr;font-size:14px;font-weight:400;letter-spacing:0;border-radius:12px;padding:14px">
+                    <h4 style="text-align:center;font-size:18px;">Detalles</h4>
+                    <div style="font-size:14px;font-weight:bold;padding-bottom:10px"><t t-out="object.company_id.name"/></div>
+                        <table style="width:100%">
+                            <tbody>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Fecha de pago</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right"><t t-out="object.recurring_next_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Número de Lote</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right"><t t-out="object.product_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:10px;padding-left:0px;width:60%" align="left">Importe</td>
+                                <td style="padding-bottom:10px;padding-right:0px;width:30%" align="right">$ <t t-esc="'{0:,.2f}'.format(object.amount_paid_invoice)" /></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom:0px;padding-left:0px;width:60%" align="left">Total Pagado</td>
+                                <td style="padding-bottom:0px;padding-right:0px;width:30%" align="right">$ <t t-esc="'{0:,.2f}'.format(object.amount_paid)" /></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                
+                </div>
+				</div>
+        </field>
+    </record>
+
+</odoo>

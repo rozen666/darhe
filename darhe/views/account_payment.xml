@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+       <record id="account_payment_inherit_tree" model="ir.ui.view">
+            <field name="name">account.payment.inherit.tree</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="before">               
+                    <field name="number_of_document" />
+                </xpath>
+                
+            </field>
+        </record>
+
+        <record id="account_payment_inherit_form" model="ir.ui.view">
+            <field name="name">account.payment.inherit.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">              
+                    <field name="number_of_document" />
+                </xpath>        
+            </field>
+        </record>
+        
+
+    </data>
+</odoo>
